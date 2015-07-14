@@ -1,24 +1,22 @@
-#define GLEW_STATIC
-#define GLFW_INCLUDE_GL3
-#define GLFW_NO_GLU
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <iostream>
+#include <chrono>
+#include <thread>
 
-#include "renderer/window.cpp"
-#include "util/framecounter.cpp"
+#include "renderer/window.h"
+#include "util/framecounter.h"
 
 using namespace std;
 
-
-
-void loop(){
+void loop(Window &window){
 	Framecounter framecounter;
 
-	while(true){
+	int loops = 0;
+
+	while(!window.isClosing() && loops < 1000){
+		this_thread::sleep_for(chrono::milliseconds(10));
+		window.update();
 		framecounter.tick();
+		loops++;
 	}
 }
 
@@ -27,7 +25,7 @@ int main() {
 
 	Window window(640, 480);
 
-	// loop();
+	loop(window);
 
 	return 0;
 }

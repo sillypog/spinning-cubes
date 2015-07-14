@@ -4,11 +4,30 @@ LIBRARY_PATHS = -L/Users/sillypog/OpenGL/glfw/build/src -L/Users/sillypog/OpenGL
 LINKER_FLAGS = -lglew -lglfw3 -lpng -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
 #DEFINES = -DGLM_MESSAGES
 
-all: bin/assets
-	g++ -v $(CFLAGS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(LINKER_FLAGS) $(DEFINES) src/main.cpp -o bin/spinning-boxes.app
+all: bin/spinning-boxes.app bin/assets
 
-bin/assets: assets
+bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o
+	g++ -v $(LIBRARY_PATHS) $(LINKER_FLAGS) obj/main.o obj/window.o obj/framecounter.o -o bin/spinning-boxes.app
+
+obj/main.o: obj src/main.cpp src/renderer/window.h src/util/framecounter.h
+	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/main.cpp -o obj/main.o
+
+obj/window.o: obj src/renderer/defines.h src/renderer/window.h src/renderer/window.cpp
+	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/renderer/window.cpp -o obj/window.o
+
+obj/framecounter.o: obj src/util/framecounter.h src/util/framecounter.cpp
+	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/util/framecounter.cpp -o obj/framecounter.o
+
+bin/assets: bin assets
 	cp -r assets bin
 
+bin:
+	mkdir bin
+
+obj:
+	mkdir obj
+
+.PHONY: clean
+
 clean:
-	rm -r bin/*
+	rm -r bin/* obj/*
