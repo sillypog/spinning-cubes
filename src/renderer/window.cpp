@@ -1,5 +1,3 @@
-#include <GL/glew.h>
-
 #include <iostream>
 
 #include "./window.h"
@@ -51,7 +49,11 @@ bool Window::isClosing(){
 	return glfwWindowShouldClose(window);
 }
 
-void Window::update(){
+void Window::poll(){
 	glfwPollEvents();
+}
+
+void Window::swapBuffers(){
+	glfwSwapBuffers(window);
 }
 

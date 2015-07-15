@@ -1,8 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "./defines.h"
-#include <GLFW/glfw3.h>
+#include "./opengl.h"
 
 class Window {
 	int width;
@@ -16,7 +15,8 @@ public:
 	~Window();
 
 	bool isClosing();
-	void update();
+	void poll();
+	void swapBuffers();
 };
 
 #endif

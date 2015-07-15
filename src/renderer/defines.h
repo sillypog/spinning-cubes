@@ -1,3 +1,0 @@
-#define GLEW_STATIC
-#define GLFW_INCLUDE_GL3
-#define GLFW_NO_GLU

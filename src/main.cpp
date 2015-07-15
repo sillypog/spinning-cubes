@@ -3,18 +3,21 @@
 #include <thread>
 
 #include "renderer/window.h"
+#include "renderer/renderer.h"
 #include "util/framecounter.h"
 
 using namespace std;
 
 void loop(Window &window){
 	Framecounter framecounter;
+	Renderer renderer(window);
 
 	int loops = 0;
 
 	while(!window.isClosing() && loops < 1000){
 		this_thread::sleep_for(chrono::milliseconds(10));
-		window.update();
+		window.poll();
+		renderer.draw();
 		framecounter.tick();
 		loops++;
 	}
