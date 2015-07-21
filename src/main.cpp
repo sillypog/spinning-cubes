@@ -8,18 +8,14 @@
 
 using namespace std;
 
-void loop(Window &window){
+void loop(Window &window, Renderer &renderer){
 	Framecounter framecounter;
-	Renderer renderer(window);
 
-	int loops = 0;
-
-	while(!window.isClosing() && loops < 1000){
+	while(!window.isClosing()){
 		this_thread::sleep_for(chrono::milliseconds(10));
 		window.poll();
 		renderer.draw();
 		framecounter.tick();
-		loops++;
 	}
 }
 
@@ -27,8 +23,11 @@ int main() {
 	cout << "Spinning Boxes" << endl;
 
 	Window window(640, 480);
+	Renderer renderer(window);
 
-	loop(window);
+	renderer.createScene();
+
+	loop(window, renderer);
 
 	return 0;
 }

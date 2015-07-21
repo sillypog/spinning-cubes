@@ -6,8 +6,8 @@ LINKER_FLAGS = -lglew -lglfw3 -lpng -framework Cocoa -framework OpenGL -framewor
 
 all: bin/spinning-boxes.app bin/assets
 
-bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o
-	g++ -v $(LIBRARY_PATHS) $(LINKER_FLAGS) obj/main.o obj/window.o obj/framecounter.o obj/renderer.o -o bin/spinning-boxes.app
+bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o
+	g++ -v $(LIBRARY_PATHS) $(LINKER_FLAGS) obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o -o bin/spinning-boxes.app
 
 obj/main.o: obj src/main.cpp src/renderer/window.h src/util/framecounter.h
 	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/main.cpp -o obj/main.o
