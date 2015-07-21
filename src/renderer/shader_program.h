@@ -1,6 +1,7 @@
 #ifndef SHADER_PROGRAM_H
 #define SHADER_PROGRAM_H
 
+#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
@@ -11,7 +12,7 @@
 using namespace std;
 
 class ShaderProgram {
-	vector<Shader*> shaders;	// Use vector<unique_ptr<Shader>> instead
+	vector<unique_ptr<Shader>> shaders;	// Use vector<unique_ptr<Shader>> instead
 
 	GLuint shaderProgram;
 

@@ -9,16 +9,18 @@ using namespace std;
 ShaderProgram::ShaderProgram(){}
 
 void ShaderProgram::addFragmentShader(string filename){
-	shaders.push_back(new Shader(filename, GL_FRAGMENT_SHADER));
+	unique_ptr<Shader> s(new Shader(filename, GL_FRAGMENT_SHADER));
+	shaders.push_back(move(s));
 }
 
 void ShaderProgram::addVertexShader(string filename){
-	shaders.push_back(new Shader(filename, GL_VERTEX_SHADER)); 	// If using unique_ptr, may need to std::move into vector
+	unique_ptr<Shader> s(new Shader(filename, GL_VERTEX_SHADER));
+	shaders.push_back(move(s));
 }
 
 void ShaderProgram::link(){
 	shaderProgram = glCreateProgram();
-	for (auto s:shaders){
+	for (auto const &s:shaders){	// Have to use references here or unique_ptr copy constructor will be illegally invoked
 		glAttachShader(shaderProgram, s->getShader());
 	}
     glLinkProgram(shaderProgram);   // Saves changes
@@ -50,6 +52,4 @@ void ShaderProgram::defineAttributes(vector<pair<string, int>> attributes){
 
 ShaderProgram::~ShaderProgram(){
 	glDeleteProgram(shaderProgram);
-    for_each(shaders.begin(), shaders.end(), deleter<Shader>());	// Avoid this with unique_pointer
-    shaders.clear();
 }
