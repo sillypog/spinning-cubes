@@ -6,8 +6,8 @@ LINKER_FLAGS = -lglew -lglfw3 -lpng -framework Cocoa -framework OpenGL -framewor
 
 all: bin/spinning-boxes.app bin/assets
 
-bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o
-	g++ -v $(LIBRARY_PATHS) $(LINKER_FLAGS) obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o -o bin/spinning-boxes.app
+bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/square.o
+	g++ -v $(LIBRARY_PATHS) $(LINKER_FLAGS) obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/square.o -o bin/spinning-boxes.app
 
 obj/main.o: obj src/main.cpp src/renderer/window.h src/util/framecounter.h
 	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/main.cpp -o obj/main.o
@@ -26,6 +26,9 @@ obj/shader.o: obj src/renderer/shader.h src/renderer/shader.cpp
 
 obj/shader_program.o: obj src/renderer/shader_program.h src/renderer/shader_program.cpp
 	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/renderer/shader_program.cpp -o obj/shader_program.o
+
+obj/square.o: obj src/model/square.h src/model/square.cpp
+	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/model/square.cpp -o obj/square.o
 
 bin/assets: bin assets
 	cp -r assets bin

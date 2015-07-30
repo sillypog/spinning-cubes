@@ -21,27 +21,17 @@ Renderer::~Renderer(){
 * It would be better to build a model of the scene,
 * itself containing instances of model classes.
 */
-void Renderer::createScene(){
-	// These values should come from model classes
-	float vertices[] {
-		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f,	// tl
-		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f,	// tr
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f,	// br
-		-0.5f, -0.5f, 1.0f, 1.0f, 1.0f	// bl
-	};
+void Renderer::createScene(Square scene){
+	vector<float> vertices = scene.getVertices();
+	vector<int> elements = scene.getElements();
 
-	int elements[] {
-		0, 1, 2, // tl, tr, br
-		2, 3, 0  // br, bl, tl
-	};
-
-	numElements = sizeof(elements);
+	numElements = sizeof(int) * elements.size();
 
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numElements, elements, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numElements, elements.data(), GL_STATIC_DRAW);
 
 	shaderProgram.defineAttributes({{"position", 2}, {"color", 3}});
 }

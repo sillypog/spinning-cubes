@@ -4,6 +4,7 @@
 #include "./opengl.h"
 #include "./window.h"
 #include "./shader_program.h"
+#include "../model/square.h"
 
 class Renderer {
 	Window& window;	// Should store a reference to the window
@@ -19,7 +20,7 @@ public:
 	Renderer(Window& _window);	// Need the Window reference to get GLFWwindow for swap buffers
 	~Renderer();
 
-	void createScene();
+	void createScene(Square scene);
 	void draw();
 };
 
