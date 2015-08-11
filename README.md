@@ -33,3 +33,7 @@ http://en.cppreference.com/w/cpp/algorithm/accumulate
 https://www.google.com/?gws_rd=ssl#q=std+accumulate+c+style+array
 http://stackoverflow.com/questions/25070586/why-does-stdaccumulate-behave-like-this-with-standard-arrays
 http://stackoverflow.com/questions/713309/c-stl-can-arrays-be-used-transparently-with-stl-functions
+
+Textures on cube.
+Add in a camera for 3D.
+Something that updates the cube position.

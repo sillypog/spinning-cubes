@@ -5,8 +5,8 @@ Renderer::Renderer(Window& _window): window(_window) {
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
 
-	shaderProgram.addVertexShader("assets/shaders/flat/vertex.glsl");
-	shaderProgram.addFragmentShader("assets/shaders/flat/fragment.glsl");
+	shaderProgram.addVertexShader("assets/shaders/solid/vertex.glsl");
+	shaderProgram.addFragmentShader("assets/shaders/solid/fragment.glsl");
 	shaderProgram.link();
 }
 
@@ -33,7 +33,7 @@ void Renderer::createScene(Entity scene){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numElements, elements.data(), GL_STATIC_DRAW);
 
-	shaderProgram.defineAttributes({{"position", 2}, {"color", 3}});
+	shaderProgram.defineAttributes({{"position", 3}, {"color", 3}, {"texcoord", 2}});
 }
 
 void Renderer::draw(){

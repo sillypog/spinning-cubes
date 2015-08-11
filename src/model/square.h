@@ -1,11 +1,7 @@
 #ifndef SQUARE_H
 #define SQUARE_H
 
-#include <vector>
-
 #include "./entity.h"
-
-using namespace std;
 
 class Square : public Entity {
 	/**
