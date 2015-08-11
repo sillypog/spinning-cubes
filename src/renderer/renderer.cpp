@@ -21,7 +21,7 @@ Renderer::~Renderer(){
 * It would be better to build a model of the scene,
 * itself containing instances of model classes.
 */
-void Renderer::createScene(Square scene){
+void Renderer::createScene(Entity scene){
 	vector<float> vertices = scene.getVertices();
 	vector<int> elements = scene.getElements();
 
