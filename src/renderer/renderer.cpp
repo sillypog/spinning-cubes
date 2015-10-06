@@ -1,4 +1,7 @@
 #include "./renderer.h"
+#include "./texture.h"
+
+#include <iostream>
 
 Renderer::Renderer(Window& _window): window(_window) {
 	glGenVertexArrays(1, &vao);
@@ -34,6 +37,10 @@ void Renderer::createScene(Entity scene){
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numElements, elements.data(), GL_STATIC_DRAW);
 
 	shaderProgram.defineAttributes({{"position", 3}, {"color", 3}, {"texcoord", 2}});
+
+	// Load any texture files needed for the scene
+	cout << "Loading texture: " << scene.getTexture() << endl;
+	Texture tex(scene.getTexture());
 }
 
 void Renderer::draw(){
