@@ -37,3 +37,7 @@ http://stackoverflow.com/questions/713309/c-stl-can-arrays-be-used-transparently
 Textures on cube.
 Add in a camera for 3D.
 Something that updates the cube position.
+
+Implementing texture support:
+http://stackoverflow.com/questions/8866904/differences-and-relationship-between-glactivetexture-and-glbindtexture
+
