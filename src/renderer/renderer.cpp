@@ -22,8 +22,8 @@ Renderer::~Renderer(){
 * itself containing instances of model classes.
 */
 void Renderer::createScene(Entity scene){
-	vector<float> vertices = scene.getVertices();
-	vector<int> elements = scene.getElements();
+	const vector<float>& vertices = scene.getVertices();
+	const vector<int>& elements = scene.getElements();
 
 	numElements = sizeof(int) * elements.size();
 
