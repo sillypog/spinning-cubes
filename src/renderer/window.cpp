@@ -45,7 +45,7 @@ Window::~Window(){
 	glfwTerminate();
 }
 
-bool Window::isClosing(){
+bool Window::isClosing() const{
 	return glfwWindowShouldClose(window);
 }
 

@@ -46,7 +46,7 @@ void Shader::compile(){
 	glCompileShader(shader);
 }
 
-void Shader::checkStatus(){
+void Shader::checkStatus() const {
 	GLint status;
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 	if (status == GL_TRUE){

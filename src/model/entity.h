@@ -14,8 +14,8 @@ protected:
 	Entity(vector<float> _v, vector<int> _e);
 
 public:
-	vector<float> getVertices();
-	vector<int> getElements();
+	vector<float> getVertices() const;
+	vector<int> getElements() const;
 };
 
 #endif
