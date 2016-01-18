@@ -7,9 +7,10 @@
 #include "./entity.h"
 #include "./cube.h"
 
+#include <memory>
+
 class Scene {
-	std::vector<Entity*> entities;
-	//Cube cube;
+	std::vector<std::unique_ptr<Entity>> entities;
 public:
 	Scene();
 	const vector<float>& getVertices() const;

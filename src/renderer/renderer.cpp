@@ -1,7 +1,5 @@
 #include "./renderer.h"
 
-#include <iostream>
-
 Renderer::Renderer(Window& _window): window(_window) {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -19,17 +17,16 @@ Renderer::~Renderer(){
 }
 
 /**
-* This method is just temporary
-* It would be better to build a model of the scene,
-* itself containing instances of model classes.
+* Scene is passed by reference. This is important because the Scene contains
+* a vector of unique pointers - attempting to pass by value causes an error because
+* it attempts to copy the vector of unique_ptrs. Given that Scene could contain
+* a lot of data, passing by reference makes more sense anyway.
 */
-void Renderer::createScene(Scene scene){
+void Renderer::createScene(Scene& scene){
 	const vector<float>& vertices = scene.getVertices();
 	const vector<int>& elements = scene.getElements();
 
 	numElements = sizeof(int) * elements.size();
-
-	cout << "number of elements to render is " << elements.size() << endl;
 
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);

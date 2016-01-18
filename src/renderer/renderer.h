@@ -20,7 +20,7 @@ public:
 	Renderer(Window& _window);	// Need the Window reference to get GLFWwindow for swap buffers
 	~Renderer();
 
-	void createScene(Scene scene);
+	void createScene(Scene& scene);
 	void draw();
 };
 
