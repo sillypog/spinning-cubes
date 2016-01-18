@@ -1,5 +1,7 @@
 #include "./renderer.h"
 
+#include <iostream>
+
 Renderer::Renderer(Window& _window): window(_window) {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -21,11 +23,13 @@ Renderer::~Renderer(){
 * It would be better to build a model of the scene,
 * itself containing instances of model classes.
 */
-void Renderer::createScene(Entity scene){
+void Renderer::createScene(Scene scene){
 	const vector<float>& vertices = scene.getVertices();
 	const vector<int>& elements = scene.getElements();
 
 	numElements = sizeof(int) * elements.size();
+
+	cout << "number of elements to render is " << elements.size() << endl;
 
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
