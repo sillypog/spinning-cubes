@@ -1,5 +1,7 @@
 #include "./scene.h"
 
+#include <algorithm>
+#include <iterator>
 #include <iostream>
 
 Scene::Scene() {
@@ -11,8 +13,6 @@ Scene::Scene() {
 
 const vector<float> Scene::getVertices() const {
 	// Modify this to put the vertices of all shapes into one list
-	// return entities[0]->getVertices();
-
 	std::vector<float> allVertices;
 
 	// Obviously want to improve this with a loop
@@ -25,13 +25,21 @@ const vector<float> Scene::getVertices() const {
 
 const vector<int> Scene::getElements() const {
 	// Modify this to put the elements of all shapes into one list
-	//return entities[0]->getElements();
-
 	std::vector<int> allElements;
 
-	allElements.reserve(entities[0]->getElements().size() + entities[1]->getElements().size());
-	allElements.insert(allElements.end(), entities[0]->getElements().begin(), entities[0]->getElements().end());
-	allElements.insert(allElements.end(), entities[1]->getElements().begin(), entities[1]->getElements().end());
+	// Loop over all of the entities and add their elements to allElements
+	// BUT offset each element by the number of vertices referenced at the start of this loop.
+	for (int i=0, offset=0, addition=0; i < entities.size(); i++){
+		const vector<int>& elements = entities[i]->getElements();	// Because we use this 3 times in loop
+		allElements.resize(allElements.size() + elements.size());
+
+		std::transform(elements.begin(), elements.end(), std::next(allElements.begin(), offset), [&](int val){
+			return val + addition;
+		});
+
+		offset = allElements.size(); // Write next set of values to the end of the vector
+		addition += (entities[i]->getVertices().size() / 8); // Each vertex has 8 array members
+	}
 
 	return allElements;
 }
