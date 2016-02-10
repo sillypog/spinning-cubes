@@ -6,6 +6,9 @@
 
 #include "./entity.h"
 #include "./cube.h"
+#include "./tlcube.h"
+#include "./brcube.h"
+
 
 #include <memory>
 
@@ -13,8 +16,8 @@ class Scene {
 	std::vector<std::unique_ptr<Entity>> entities;
 public:
 	Scene();
-	const vector<float>& getVertices() const;
-	const vector<int>& getElements() const;
+	const vector<float> getVertices() const;
+	const vector<int> getElements() const;
 };
 
 #endif

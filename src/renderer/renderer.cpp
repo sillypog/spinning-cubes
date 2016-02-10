@@ -1,5 +1,6 @@
 #include "./renderer.h"
 
+#include <iostream>
 Renderer::Renderer(Window& _window): window(_window) {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -23,11 +24,19 @@ Renderer::~Renderer(){
 * a lot of data, passing by reference makes more sense anyway.
 */
 void Renderer::createScene(Scene& scene){
-	const vector<float>& vertices = scene.getVertices();
-	const vector<int>& elements = scene.getElements();
+	const vector<float> vertices = scene.getVertices();
+	const vector<int> elements = scene.getElements();
 
 	numElements = sizeof(int) * elements.size();
 
+	std::cout << vertices.size() << " vertices to render" << std::endl;
+	std::cout << elements.size() << " elements to render" << std::endl;
+
+
+	// I think I might have to have a vertex buffer for each cube
+	// (probably owned by the Cube object)
+	// and bind it at draw time
+	// each one gets its own glDrawElements call
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);

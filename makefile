@@ -6,8 +6,8 @@ LINKER_FLAGS = -lglew -lglfw3 -lpng -framework Cocoa -framework OpenGL -framewor
 
 all: bin/spinning-boxes.app bin/assets
 
-bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/entity.o obj/square.o obj/cube.o obj/scene.o
-	g++ -v $(LIBRARY_PATHS) $(LINKER_FLAGS) obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/entity.o obj/square.o obj/cube.o obj/scene.o -o bin/spinning-boxes.app
+bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/entity.o obj/square.o obj/cube.o obj/tlcube.o obj/brcube.o obj/scene.o
+	g++ -v $(LIBRARY_PATHS) $(LINKER_FLAGS) obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/entity.o obj/square.o obj/cube.o obj/tlcube.o obj/brcube.o obj/scene.o -o bin/spinning-boxes.app
 
 obj/main.o: obj src/main.cpp src/renderer/window.h src/util/framecounter.h
 	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/main.cpp -o obj/main.o
@@ -35,6 +35,12 @@ obj/square.o: obj src/model/square.h src/model/square.cpp
 
 obj/cube.o: obj src/model/cube.h src/model/cube.cpp
 	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/model/cube.cpp -o obj/cube.o
+
+obj/tlcube.o: obj src/model/tlcube.h src/model/tlcube.cpp
+	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/model/tlcube.cpp -o obj/tlcube.o
+
+obj/brcube.o: obj src/model/brcube.h src/model/brcube.cpp
+	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/model/brcube.cpp -o obj/brcube.o
 
 obj/scene.o: obj src/model/scene.h src/model/scene.cpp
 	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/model/scene.cpp -o obj/scene.o
