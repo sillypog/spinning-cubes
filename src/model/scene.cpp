@@ -5,7 +5,7 @@
 #include <iostream>
 
 Scene::Scene() {
-	entities.emplace_back(new TLCube);
+	entities.emplace_back(new Cube);
 	entities.emplace_back(new BRCube);
 
 	std::cout << "Creating scene containing " << entities.size() << " shapes" << std::endl;
