@@ -1,4 +1,5 @@
 #include "./cube.h"
+#include <iostream>
 
 const vector<float> Cube::templateVertices {
 	-0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 0
@@ -28,4 +29,13 @@ const vector<int> Cube::templateElements {
 	3,  2, 11, 11, 15,  3
 };
 
-Cube::Cube() : Entity(templateVertices, templateElements) {}
+Cube::Cube() : Entity(templateVertices, templateElements) {
+	std::cout << "Cube is using default translation" << endl;
+	glm::vec3 translation {0.0f, 0.0f, 0.0f};
+	transform = glm::translate(transform, translation);
+}
+
+Cube::Cube(glm::vec3 translation) : Entity(templateVertices, templateElements) {
+	std::cout << "Cube's x translation is " << translation.x << std::endl;
+	transform = glm::translate(transform, translation);
+}

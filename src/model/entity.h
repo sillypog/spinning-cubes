@@ -3,6 +3,9 @@
 
 #include <vector>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 using namespace std;
 
 class Entity {
@@ -11,6 +14,8 @@ class Entity {
 	vector<int> elements;
 
 protected:
+	glm::mat4 transform;
+
 	// Modify this to take a (x,y,z) center struct (and a scale value)
 	// A cube could be created as Cube({-0.2, 0, 0}, 1)
 	// It would then construct a matrix from the position and scale info

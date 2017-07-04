@@ -9,6 +9,7 @@ class Cube : public Entity {
 
 public:
 	Cube();
+	Cube(glm::vec3 translation);
 };
 
 #endif
