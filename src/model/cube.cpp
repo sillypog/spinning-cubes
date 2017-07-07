@@ -1,5 +1,4 @@
 #include "./cube.h"
-#include <iostream>
 
 const vector<float> Cube::templateVertices {
 	-0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // 0

@@ -24,6 +24,7 @@ public:
 	void link();
 	// Convert this to a method that takes an array of all attributes
 	void defineAttributes(vector<pair<string, int>> attributes);	// Supply these in order
+	GLint uniform(const char* uniform);
 };
 
 #endif

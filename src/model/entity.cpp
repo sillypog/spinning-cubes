@@ -11,3 +11,11 @@ const vector<float>& Entity::getVertices() const {
 const vector<int>& Entity::getElements() const {
 	return elements;
 }
+
+int Entity::numElements() const {
+	return elements.size();
+}
+
+glm::mat4 Entity::getTransform() const {
+	return transform;
+}

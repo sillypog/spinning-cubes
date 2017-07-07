@@ -1,6 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <iostream>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -25,6 +26,8 @@ protected:
 public:
 	const vector<float>& getVertices() const;
 	const vector<int>& getElements() const;
+	int numElements() const;
+	glm::mat4 getTransform() const;	// Could return const reference once I know it works
 };
 
 #endif

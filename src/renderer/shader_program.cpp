@@ -50,6 +50,11 @@ void ShaderProgram::defineAttributes(vector<pair<string, int>> attributes){
 	}
 }
 
+GLint ShaderProgram::uniform(const char* uniform) {
+	return glGetUniformLocation(shaderProgram, uniform);
+}
+
+
 ShaderProgram::~ShaderProgram(){
 	glDeleteProgram(shaderProgram);
 }
