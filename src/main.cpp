@@ -23,11 +23,11 @@ void loop(Window &window, Renderer &renderer){
 int main() {
 	cout << "Spinning Boxes" << endl;
 
-	Window window(640, 480);
-	Renderer renderer(window);
-
 	Scene scene;
-	renderer.createScene(scene);
+	Window window(640, 480);
+	Renderer renderer(window, scene);
+
+	renderer.createScene();
 
 	loop(window, renderer);
 

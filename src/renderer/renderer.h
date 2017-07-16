@@ -8,6 +8,7 @@
 
 class Renderer {
 	Window& window;	// Should store a reference to the window
+	Scene& scene;	// Should store a reference to the scene to get shapes to draw
 	ShaderProgram shaderProgram;
 
 	GLuint vao;
@@ -17,10 +18,10 @@ class Renderer {
 	int numElements;
 
 public:
-	Renderer(Window& _window);	// Need the Window reference to get GLFWwindow for swap buffers
+	Renderer(Window& _window, Scene& _scene);	// Need the Window reference to get GLFWwindow for swap buffers
 	~Renderer();
 
-	void createScene(Scene& scene);
+	void createScene();
 	void draw();
 };
 
