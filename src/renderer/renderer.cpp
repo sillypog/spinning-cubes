@@ -1,5 +1,6 @@
 #include "./renderer.h"
 
+#include <iostream>
 Renderer::Renderer(Window& _window): window(_window) {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -17,16 +18,25 @@ Renderer::~Renderer(){
 }
 
 /**
-* This method is just temporary
-* It would be better to build a model of the scene,
-* itself containing instances of model classes.
+* Scene is passed by reference. This is important because the Scene contains
+* a vector of unique pointers - attempting to pass by value causes an error because
+* it attempts to copy the vector of unique_ptrs. Given that Scene could contain
+* a lot of data, passing by reference makes more sense anyway.
 */
-void Renderer::createScene(Entity scene){
-	const vector<float>& vertices = scene.getVertices();
-	const vector<int>& elements = scene.getElements();
+void Renderer::createScene(Scene& scene){
+	const vector<float> vertices = scene.getVertices();
+	const vector<int> elements = scene.getElements();
 
 	numElements = sizeof(int) * elements.size();
 
+	std::cout << vertices.size() << " vertices to render" << std::endl;
+	std::cout << elements.size() << " elements to render" << std::endl;
+
+
+	// I think I might have to have a vertex buffer for each cube
+	// (probably owned by the Cube object)
+	// and bind it at draw time
+	// each one gets its own glDrawElements call
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);

@@ -5,7 +5,7 @@
 #include "renderer/window.h"
 #include "renderer/renderer.h"
 #include "util/framecounter.h"
-#include "model/cube.h"
+#include "model/scene.h"
 
 using namespace std;
 
@@ -26,7 +26,7 @@ int main() {
 	Window window(640, 480);
 	Renderer renderer(window);
 
-	Cube scene;
+	Scene scene;
 	renderer.createScene(scene);
 
 	loop(window, renderer);
