@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iterator>
 #include <iostream>
+#include <numeric> // accumulate
 
 Scene::Scene() {
 	entities.emplace_back(new Cube({-0.3f, 0.0f, 0.0f}));
@@ -15,10 +16,15 @@ const vector<float> Scene::getVertices() const {
 	// Modify this to put the vertices of all shapes into one list
 	std::vector<float> allVertices;
 
-	// Obviously want to improve this with a loop
-	allVertices.reserve(entities[0]->getVertices().size() + entities[1]->getVertices().size());
-	allVertices.insert(allVertices.end(), entities[0]->getVertices().begin(), entities[0]->getVertices().end());
-	allVertices.insert(allVertices.end(), entities[1]->getVertices().begin(), entities[1]->getVertices().end());
+	// Loop over the entities and put their vertices in the list
+	int reserveSpace = std::accumulate(entities.begin(), entities.end(), 0, [](int accumulator, const std::unique_ptr<Entity> &entity){
+		return accumulator + entity->getVertices().size();
+	});
+	allVertices.reserve(reserveSpace);
+
+	for(auto &entity : entities) {
+		allVertices.insert(allVertices.end(), entity->getVertices().begin(), entity->getVertices().end());
+	}
 
 	return allVertices;
 }

@@ -71,7 +71,7 @@ void Renderer::draw(){
 		// https://www.opengl.org/discussion_boards/showthread.php/176296-glDrawElements-multiple-calls-one-index-array
 		// https://stackoverflow.com/questions/23177229/how-to-cast-int-to-const-glvoid
 		// https://stackoverflow.com/questions/8283714/what-is-the-result-of-null-int/8284829#8284829
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, (GLvoid *) (drawnElements * sizeof(int)));
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(drawnElements * sizeof(int)));
 		drawnElements += count;
 	}
 
