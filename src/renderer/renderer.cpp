@@ -50,8 +50,8 @@ void Renderer::createScene(){
 	shaderProgram.defineAttributes({{"position", 3}, {"color", 3}, {"texcoord", 2}});
 
 	// Load any texture files needed for the scene
-	cout << "Loading texture: " << scene.getTexture() << endl;
-	Texture tex(scene.getTexture());
+	// cout << "Loading texture: " << scene.getTexture() << endl;
+	// Texture tex(scene.getTexture());
 }
 
 void Renderer::draw(){
