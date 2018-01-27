@@ -58,8 +58,6 @@ void Renderer::draw(){
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_INT, 0);
-
 	// Draw each shape in the scene separately, applying the transform for each
 	// For each shape, we need the scene to give us:
 	// - The transform for the shape
@@ -68,9 +66,9 @@ void Renderer::draw(){
 
 	int drawnElements = 0;
 
-	for (int i = 0; i < scene.entities.size(); i++) {
-		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(scene.entities[i]->getTransform()));
-		int count = scene.entities[i]->numElements();
+	for (auto &entity : scene.entities) {
+		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(entity->getTransform()));
+		int count = entity->numElements();
 
 		// It took so long to work out how the 4th parameter to set the starting index
 		// works. The offset needs to be cast to a pointer, and that apparently
@@ -81,7 +79,6 @@ void Renderer::draw(){
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(drawnElements * sizeof(int)));
 		drawnElements += count;
 	}
-
 
 	window.swapBuffers();
 }
