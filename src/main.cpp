@@ -5,7 +5,7 @@
 #include "renderer/window.h"
 #include "renderer/renderer.h"
 #include "util/framecounter.h"
-#include "model/cube.h"
+#include "model/scene.h"
 
 using namespace std;
 
@@ -23,11 +23,11 @@ void loop(Window &window, Renderer &renderer){
 int main() {
 	cout << "Spinning Boxes" << endl;
 
+	Scene scene;
 	Window window(640, 480);
-	Renderer renderer(window);
+	Renderer renderer(window, scene);
 
-	Cube scene;
-	renderer.createScene(scene);
+	renderer.createScene();
 
 	loop(window, renderer);
 

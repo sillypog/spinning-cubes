@@ -4,9 +4,12 @@
 #include "./entity.h"
 
 class Cube : public Entity {
+	const static vector<float> templateVertices;
+	const static vector<int> templateElements;
 
 public:
 	Cube();
+	Cube(glm::vec3 translation);
 };
 
 #endif

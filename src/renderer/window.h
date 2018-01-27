@@ -14,7 +14,7 @@ public:
 	Window(int _width, int _height);
 	~Window();
 
-	bool isClosing();
+	bool isClosing() const;
 	void poll();
 	void swapBuffers();
 };

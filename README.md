@@ -41,3 +41,12 @@ Something that updates the cube position.
 Implementing texture support:
 http://stackoverflow.com/questions/8866904/differences-and-relationship-between-glactivetexture-and-glbindtexture
 
+# Goal for branch 'scene-management'
+
+Create a scene class. Eventually it will describe the position of all the geometry, cameras and lights in the scene. For now, it can just have the hard coded geometry values of the shapes. This should include shape position and size. The cube class will need to be modified so that it's position and size can be changed and that will update the coordinates.
+
+Consider also adding in code to the cube itself that updates the geometry to automatically rotate. That way I'll be able to see that it actually is a cube.
+
+# Goal for branch 'keyboard-control'
+
+Instead of having the cube automatically rotate, it should turn while the arrow keys are held down. The keyboard handling code should be totally separate from the renderer and ideally work using the command pattern.

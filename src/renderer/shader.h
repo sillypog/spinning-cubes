@@ -16,7 +16,7 @@ class Shader {
 
 	string load(string filename);
 	void compile();
-	void checkStatus();
+	void checkStatus() const;
 
 public:
 	Shader(string _filename, GLenum _type);

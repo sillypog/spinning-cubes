@@ -1,43 +1,67 @@
-CFLAGS=-Wall -Wextra -std=c++1y
-INCLUDE_PATHS = -I/Users/sillypog/OpenGL/glfw/include -I/Users/sillypog/OpenGL/glew/glew-1.10.0-built/include -I/Users/sillypog/OpenGL/glm
-LIBRARY_PATHS = -L/Users/sillypog/OpenGL/glfw/build/src -L/Users/sillypog/OpenGL/glew/glew-1.10.0-built/lib
-LINKER_FLAGS = -lglew -lglfw3 -lpng -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
-#DEFINES = -DGLM_MESSAGES
+CFLAGS:=-Wall -Wextra -std=c++1y
+# VERBOSE_FLAG:=-v # Comment out for clearer compile messages
+INCLUDE_PATHS:= -I/Users/sillypog/OpenGL/glfw/include -I/Users/sillypog/OpenGL/glew/glew-1.10.0-built/include -I/Users/sillypog/OpenGL/glm
+LIBRARY_PATHS:= -L/Users/sillypog/OpenGL/glfw/build/src -L/Users/sillypog/OpenGL/glew/glew-1.10.0-built/lib
+LINKER_FLAGS:= -lglew -lglfw3 -lpng -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
+#DEFINES:= -DGLM_MESSAGES
+DEPS=-MMD -MF deps/$(basename $(@F)).d
 
-all: bin/spinning-boxes.app bin/assets
+all: obj deps bin bin/spinning-boxes.app bin/assets
 
-bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/texture.o obj/entity.o obj/square.o obj/cube.o
-	g++ -v $(LIBRARY_PATHS) $(LINKER_FLAGS) obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/texture.o obj/entity.o obj/square.o obj/cube.o -o bin/spinning-boxes.app
+bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/texture.o obj/entity.o obj/square.o obj/cube.o obj/tlcube.o obj/brcube.o obj/scene.o
+	g++ $(VERBOSE_FLAG) $(LIBRARY_PATHS) $(LINKER_FLAGS) $^ -o $@
 
-obj/main.o: obj src/main.cpp src/renderer/window.h src/util/framecounter.h
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/main.cpp -o obj/main.o
+obj/main.o: src/main.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/main.d
 
-obj/window.o: obj src/renderer/window.h src/renderer/window.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/renderer/window.cpp -o obj/window.o
+obj/window.o: src/renderer/window.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/window.d
 
-obj/framecounter.o: obj src/util/framecounter.h src/util/framecounter.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/util/framecounter.cpp -o obj/framecounter.o
+obj/framecounter.o: src/util/framecounter.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/framecounter.d
 
-obj/renderer.o: obj src/renderer/renderer.h src/renderer/renderer.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/renderer/renderer.cpp -o obj/renderer.o
+obj/renderer.o: src/renderer/renderer.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/renderer.d
 
-obj/shader.o: obj src/renderer/shader.h src/renderer/shader.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/renderer/shader.cpp -o obj/shader.o
+obj/shader.o: src/renderer/shader.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/shader.d
 
-obj/shader_program.o: obj src/renderer/shader_program.h src/renderer/shader_program.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/renderer/shader_program.cpp -o obj/shader_program.o
+obj/shader_program.o: src/renderer/shader_program.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/shader_program.d
 
-obj/texture.o: obj src/renderer/texture.h src/renderer/texture.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/renderer/texture.cpp -o obj/texture.o
+obj/texture.o: src/renderer/texture.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/texture.d
 
-obj/entity.o: obj src/model/entity.h src/model/entity.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/model/entity.cpp -o obj/entity.o
+obj/entity.o: src/model/entity.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/entity.d
 
-obj/square.o: obj src/model/square.h src/model/square.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/model/square.cpp -o obj/square.o
+obj/square.o: src/model/square.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/square.d
 
-obj/cube.o: obj src/model/cube.h src/model/cube.cpp
-	g++ -c -v $(CFLAGS) $(INCLUDE_PATHS) src/model/cube.cpp -o obj/cube.o
+obj/cube.o: src/model/cube.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/cube.d
+
+obj/tlcube.o: src/model/tlcube.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/tlcube.d
+
+obj/brcube.o: src/model/brcube.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/brcube.d
+
+obj/scene.o: src/model/scene.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/scene.d
 
 bin/assets: bin assets
 	cp -r assets bin
@@ -45,10 +69,13 @@ bin/assets: bin assets
 bin:
 	mkdir bin
 
+deps:
+	mkdir deps
+
 obj:
 	mkdir obj
 
 .PHONY: clean
 
 clean:
-	rm -r bin/* obj/*
+	-rm -r bin/* deps/* obj/*

@@ -4,14 +4,22 @@
 
 Entity::Entity(vector<float> _v, vector<int> _e, string _t) : vertices(std::move(_v)), elements(std::move(_e)), texture(_t) {}
 
-vector<float> Entity::getVertices(){
-	return vertices;	// Return a const reference?
+const vector<float>& Entity::getVertices() const {
+	return vertices;
 }
 
-vector<int> Entity::getElements(){
+const vector<int>& Entity::getElements() const {
 	return elements;
 }
 
 string Entity::getTexture(){
 	return "assets/textures/" + texture;
+}
+
+int Entity::numElements() const {
+	return elements.size();
+}
+
+glm::mat4 Entity::getTransform() const {
+	return transform;
 }
