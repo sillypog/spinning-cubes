@@ -4,6 +4,8 @@
 #include <iterator>
 #include <iostream>
 #include <numeric> // accumulate
+#include <string>
+#include <unordered_set>
 
 Scene::Scene() {
 	entities.emplace_back(new Cube({-0.3f, 0.0f, 0.0f}));
@@ -49,4 +51,14 @@ const vector<int> Scene::getElements() const {
 	}
 
 	return allElements;
+}
+
+const unordered_set<string> Scene::getTextures() const {
+	unordered_set<string> allTextures;
+
+	for (auto &entity : entities){
+		allTextures.insert(entity->getTexture());
+	}
+
+	return allTextures;
 }

@@ -3,9 +3,13 @@
 
 #include <iostream>
 
-#include <iostream>
 #include <glm/gtc/type_ptr.hpp>
-Renderer::Renderer(Window& _window, Scene& _scene): window(_window), scene(_scene) {
+
+Renderer::Renderer(Window& _window, Scene& _scene):
+	window(_window),
+	scene(_scene),
+	textureManager(new TextureManager)
+{
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -16,6 +20,8 @@ Renderer::Renderer(Window& _window, Scene& _scene): window(_window), scene(_scen
 }
 
 Renderer::~Renderer(){
+	delete textureManager;
+
 	glDeleteBuffers(1, &ebo);
 	glDeleteBuffers(1, &vbo);
 	glDeleteVertexArrays(1, &vao);
@@ -50,8 +56,8 @@ void Renderer::createScene(){
 	shaderProgram.defineAttributes({{"position", 3}, {"color", 3}, {"texcoord", 2}});
 
 	// Load any texture files needed for the scene
-	// cout << "Loading texture: " << scene.getTexture() << endl;
-	// Texture tex(scene.getTexture());
+	cout << "Getting set of textures." << endl;
+	textureManager->loadTextureSet(scene.getTextures());
 }
 
 void Renderer::draw(){
@@ -68,8 +74,13 @@ void Renderer::draw(){
 
 	for (auto &entity : scene.entities) {
 		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(entity->getTransform()));
-		int count = entity->numElements();
 
+		textureManager->setTextureForDraw(entity->getTexture());
+		// GLuint textureId = textureManager->getBufferIdForTexture(entity->getTexture());
+		// std::cout << "Setting textureId for draw to " << textureId << std::endl;
+		// glUniform1i(shaderProgram.uniform("tex"), textureId);	// This is actually taking the active texture unit, not the buffer
+
+		int count = entity->numElements();
 		// It took so long to work out how the 4th parameter to set the starting index
 		// works. The offset needs to be cast to a pointer, and that apparently
 		// only works certain ways.

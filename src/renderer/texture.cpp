@@ -13,6 +13,41 @@ Texture::Texture(string filename){
     }
 }
 
+Texture::~Texture() {
+    delete [] data;
+}
+
+GLuint Texture::getBufferId() const {
+    return bufferId;
+}
+
+void Texture::setBufferId(GLuint id) {
+    bufferId = id;
+}
+
+bool Texture::hasAlpha() const {
+    return alpha;
+}
+
+int Texture::getWidth() const {
+    std::cout << "Width " << width << std::endl;
+    return width;
+}
+
+int Texture::getHeight() const {
+    std::cout << "Height " << height << std::endl;
+    return height;
+}
+
+const GLubyte* Texture::getDataPointer() const {
+    std::cout << "Data ";
+    for (int i = 0; i < 20; i++) {
+        std::cout << data[i];
+    }
+    std::cout << "..." << std::endl;
+    return data;
+}
+
 bool Texture::loadPNGImage(string filename, int &outWidth, int &outHeight, bool &outHasAlpha, GLubyte **outData) {
     // const char* name = filename.c_str();
 

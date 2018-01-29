@@ -11,13 +11,19 @@ class Texture {
 	int width, height;
 	bool alpha;
 	GLubyte* data;
+	GLuint bufferId;
 
 	bool loadPNGImage(string filename, int& outWidth, int& outHeight, bool& outHasAlpha, GLubyte** outData);
 
 public:
 	Texture(string filename);
-
-	// Need a destructor to clear the data member?
+	~Texture();
+	GLuint getBufferId() const;
+	void setBufferId(GLuint id);
+	bool hasAlpha() const;
+	int getWidth() const;
+	int getHeight() const;
+	const GLubyte* getDataPointer() const;
 };
 
 #endif

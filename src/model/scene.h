@@ -9,16 +9,17 @@
 #include "./tlcube.h"
 #include "./brcube.h"
 
-
+#include <unordered_set>
 #include <memory>
+#include <string>
 
 class Scene {
-	// std::vector<std::unique_ptr<Entity>> entities;
 public:
 	std::vector<std::unique_ptr<Entity>> entities; // Made public to test rendering each entity
 	Scene();
 	const vector<float> getVertices() const;
 	const vector<int> getElements() const;
+	const std::unordered_set<std::string> getTextures() const;
 };
 
 #endif
