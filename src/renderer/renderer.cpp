@@ -80,18 +80,10 @@ void Renderer::draw(){
 		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(entity->getTransform()));
 
 		// Bind the appropriate textures into the appropriate texture units
-		int i_activeTextureUnit = 0;
+		GLenum activeTextureUnit = GL_TEXTURE0;
 		for (auto &texture : entity->getTextures()) {
-			switch (i_activeTextureUnit) {
-				case 0: glActiveTexture(GL_TEXTURE0);
-					break;
-				case 1: glActiveTexture(GL_TEXTURE1);
-					break;
-				default:
-					std::cout << "Only two texture units are supported" << std::endl;
-			}
+			glActiveTexture(activeTextureUnit++);	// Take current value and increment
 			textureManager->setTextureForDraw(texture);
-			i_activeTextureUnit++;
 		}
 
 		int count = entity->numElements();
