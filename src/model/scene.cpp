@@ -57,7 +57,9 @@ const unordered_set<string> Scene::getTextures() const {
 	unordered_set<string> allTextures;
 
 	for (auto &entity : entities){
-		allTextures.insert(entity->getTexture());
+		for (auto &textureName : entity->getTextures()) {
+			allTextures.insert(textureName);
+		}
 	}
 
 	return allTextures;

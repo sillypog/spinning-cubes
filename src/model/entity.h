@@ -14,7 +14,7 @@ class Entity {
 // Need to make these protected?
 	vector<float> vertices;
 	vector<int> elements;
-	string texture;
+	vector<string> textures;
 
 protected:
 	glm::mat4 transform;
@@ -23,12 +23,12 @@ protected:
 	// A cube could be created as Cube({-0.2, 0, 0}, 1)
 	// It would then construct a matrix from the position and scale info
 	// and use this to pass a modified version of its vertices to the parent entity
-	Entity(vector<float> _v, vector<int> _e, string _t = "");
+	Entity(vector<float> _v, vector<int> _e, vector<string> _t = {});
 
 public:
 	const vector<float>& getVertices() const;
 	const vector<int>& getElements() const;
-	string getTexture();
+	const vector<string> getTextures() const;
 	int numElements() const;
 	glm::mat4 getTransform() const;	// Could return const reference once I know it works
 };

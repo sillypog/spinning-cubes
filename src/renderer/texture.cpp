@@ -5,7 +5,7 @@
 #include <png.h>
 
 Texture::Texture(string filename){
-	bool success = loadPNGImage(filename, width, height, alpha, &data);
+	bool success = loadPNGImage("assets/textures/" + filename, width, height, alpha, &data);
 
 	cout << "Outcome of loading " << filename << ": " << (success ? "success" : "fail") << endl;
     if (success){

@@ -55,6 +55,10 @@ void Renderer::createScene(){
 
 	shaderProgram.defineAttributes({{"position", 3}, {"color", 3}, {"texcoord", 2}});
 
+	// One time set up of texture uniforms to texture units
+	glUniform1i(shaderProgram.uniform("tex0"), 0);
+	glUniform1i(shaderProgram.uniform("tex1"), 1);
+
 	// Load any texture files needed for the scene
 	cout << "Getting set of textures." << endl;
 	textureManager->loadTextureSet(scene.getTextures());
@@ -75,10 +79,20 @@ void Renderer::draw(){
 	for (auto &entity : scene.entities) {
 		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(entity->getTransform()));
 
-		textureManager->setTextureForDraw(entity->getTexture());
-		// GLuint textureId = textureManager->getBufferIdForTexture(entity->getTexture());
-		// std::cout << "Setting textureId for draw to " << textureId << std::endl;
-		// glUniform1i(shaderProgram.uniform("tex"), textureId);	// This is actually taking the active texture unit, not the buffer
+		// Bind the appropriate textures into the appropriate texture units
+		int i_activeTextureUnit = 0;
+		for (auto &texture : entity->getTextures()) {
+			switch (i_activeTextureUnit) {
+				case 0: glActiveTexture(GL_TEXTURE0);
+					break;
+				case 1: glActiveTexture(GL_TEXTURE1);
+					break;
+				default:
+					std::cout << "Only two texture units are supported" << std::endl;
+			}
+			textureManager->setTextureForDraw(texture);
+			i_activeTextureUnit++;
+		}
 
 		int count = entity->numElements();
 		// It took so long to work out how the 4th parameter to set the starting index
