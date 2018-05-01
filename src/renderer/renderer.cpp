@@ -76,12 +76,12 @@ void Renderer::draw(){
 
 	int drawnElements = 0;
 
-	for (auto &entity : scene.entities) {
+	for (auto const &entity : scene.entities) {
 		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(entity->getTransform()));
 
 		// Bind the appropriate textures into the appropriate texture units
 		GLenum activeTextureUnit = GL_TEXTURE0;
-		for (auto &texture : entity->getTextures()) {
+		for (auto const &texture : entity->getTextures()) {
 			glActiveTexture(activeTextureUnit++);	// Take current value and increment
 			textureManager->setTextureForDraw(texture);
 		}

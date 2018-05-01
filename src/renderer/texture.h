@@ -5,18 +5,16 @@
 
 #include "./opengl.h"
 
-using namespace std;
-
 class Texture {
 	int width, height;
 	bool alpha;
 	GLubyte* data;
 	GLuint bufferId;
 
-	bool loadPNGImage(string filename, int& outWidth, int& outHeight, bool& outHasAlpha, GLubyte** outData);
+	bool loadPNGImage(const std::string &filename, int& outWidth, int& outHeight, bool& outHasAlpha, GLubyte** outData);
 
 public:
-	Texture(string filename);
+	Texture(const std::string &filename);
 	~Texture();
 	GLuint getBufferId() const;
 	void setBufferId(GLuint id);

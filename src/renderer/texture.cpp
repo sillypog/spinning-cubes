@@ -4,12 +4,12 @@
 
 #include <png.h>
 
-Texture::Texture(string filename){
+Texture::Texture(const std::string &filename){
 	bool success = loadPNGImage("assets/textures/" + filename, width, height, alpha, &data);
 
-	cout << "Outcome of loading " << filename << ": " << (success ? "success" : "fail") << endl;
+	std::cout << "Outcome of loading " << filename << ": " << (success ? "success" : "fail") << std::endl;
     if (success){
-    	cout << filename << ": " << width << "x" << height << ", alpha: " << alpha << endl;
+    	std::cout << filename << ": " << width << "x" << height << ", alpha: " << alpha << std::endl;
     }
 }
 
@@ -48,16 +48,13 @@ const GLubyte* Texture::getDataPointer() const {
     return data;
 }
 
-bool Texture::loadPNGImage(string filename, int &outWidth, int &outHeight, bool &outHasAlpha, GLubyte **outData) {
-    // const char* name = filename.c_str();
-
+bool Texture::loadPNGImage(const std::string &filename, int &outWidth, int &outHeight, bool &outHasAlpha, GLubyte **outData) {
     png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;
     int color_type, interlace_type;
     FILE *fp;
 
-    // if ((fp = fopen(name, "rb")) == NULL)
    	if ((fp = fopen(filename.c_str(), "rb")) == NULL)
         return false;
 

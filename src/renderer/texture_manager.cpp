@@ -14,7 +14,7 @@ void TextureManager::loadTextureSet(std::unordered_set<std::string> textureNames
 
 	// Load data for each texture
 	textureData.clear();
-	for (auto textureName : textureNames) {
+	for (auto const textureName : textureNames) {
 		std::cout << "Loading " << textureName << " data" << std::endl;
 		textureData.emplace(textureName, textureName);
 	}
@@ -37,18 +37,23 @@ void TextureManager::loadTextureSet(std::unordered_set<std::string> textureNames
 	}
 }
 
-GLuint TextureManager::getBufferIdForTexture(std::string textureName) {
+GLuint TextureManager::getBufferIdForTexture(const std::string textureName) const {
 	auto result = textureData.find(textureName);	// Hopefully this doesn't copy the result into the iterator
 	if (result == textureData.end()) {
 		std::cout << "No texture named " << textureName << " found." << std::endl;
 		return -1;	// Should probably throw exception
 	} else {
-		Texture &texture = result->second;
+		const Texture &texture = result->second;
 		return texture.getBufferId();
 	}
 }
 
-void TextureManager::setTextureForDraw(std::string textureName) {
+/*
+I wasn't sure about labeling this method as `const` because it does have side
+effects. However, it doesn't change anything that can be observed through the
+interface of this class.
+*/
+void TextureManager::setTextureForDraw(const std::string textureName) const {
 	GLuint bufferId = getBufferIdForTexture(textureName);
 	glBindTexture(GL_TEXTURE_2D, textureBuffers[bufferId]);
 }

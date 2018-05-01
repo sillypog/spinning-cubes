@@ -15,8 +15,8 @@ class TextureManager {
 
 public:
 	void loadTextureSet(std::unordered_set<std::string> textureNames);
-	GLuint getBufferIdForTexture(std::string textureName);
-	void setTextureForDraw(std::string textureName);
+	GLuint getBufferIdForTexture(const std::string textureName) const;
+	void setTextureForDraw(const std::string textureName) const;
 };
 
 #endif
