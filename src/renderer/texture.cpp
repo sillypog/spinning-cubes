@@ -5,7 +5,7 @@
 #include <png.h>
 
 Texture::Texture(const std::string &filename){
-	bool success = loadPNGImage("assets/textures/" + filename, width, height, alpha, &data);
+	bool success = loadPNGImage("assets/textures/" + filename);
 
 	std::cout << "Outcome of loading " << filename << ": " << (success ? "success" : "fail") << std::endl;
     if (success){
@@ -56,15 +56,25 @@ const GLubyte* Texture::getDataPointer() const {
     return data;
 }
 
-bool Texture::loadPNGImage(const std::string &filename, int &outWidth, int &outHeight, bool &outHasAlpha, GLubyte **outData) {
+bool Texture::loadPNGImage(const std::string &filename) {
     png_structp png_ptr;
     png_infop info_ptr;
-    unsigned int sig_read = 0;
+    const unsigned int SIG_BYTES = 8;
     int color_type, interlace_type;
     FILE *fp;
 
-   	if ((fp = fopen(filename.c_str(), "rb")) == NULL)
+   	if ((fp = fopen(filename.c_str(), "rb")) == NULL) {
         return false;
+    }
+
+    // Read PNG signature
+    unsigned char sig[SIG_BYTES];
+    fread(sig, 1, 8, fp);
+    if (!png_check_sig(sig, SIG_BYTES)) {
+        std::cout << filename << " is not a .png" << std::endl;
+        fclose(fp);
+        return false;
+    }
 
     /* Create and initialize the png_struct
      * with the desired error handler
@@ -77,8 +87,7 @@ bool Texture::loadPNGImage(const std::string &filename, int &outWidth, int &outH
      * was compiled with a compatible version
      * of the library.  REQUIRED
      */
-    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
-                                     NULL, NULL, NULL);
+    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
     if (png_ptr == NULL) {
         fclose(fp);
@@ -119,7 +128,7 @@ bool Texture::loadPNGImage(const std::string &filename, int &outWidth, int &outH
 
     /* If we have already
      * read some of the signature */
-    png_set_sig_bytes(png_ptr, sig_read);
+    png_set_sig_bytes(png_ptr, SIG_BYTES);
 
     /*
      * If you have enough memory to read
@@ -142,24 +151,21 @@ bool Texture::loadPNGImage(const std::string &filename, int &outWidth, int &outH
      */
     png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, NULL);
 
-    png_uint_32 width, height;
+    png_uint_32 png_width, png_height;
     int bit_depth;
-    png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
-                 &interlace_type, NULL, NULL);
-    outWidth = width;
-    outHeight = height;
-    outHasAlpha = (color_type & PNG_COLOR_MASK_ALPHA);
+    png_get_IHDR(png_ptr, info_ptr, &png_width, &png_height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
+
+    width = static_cast<int>(png_width);
+    height = static_cast<int>(png_height);
+    alpha = (color_type & PNG_COLOR_MASK_ALPHA);
 
     unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-    *outData = (unsigned char*) malloc(row_bytes * outHeight);
+    data = new GLubyte[row_bytes * height];
 
     png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 
-    for (int i = 0; i < outHeight; i++) {
-        // note that png is ordered top to
-        // bottom, but OpenGL expect it bottom to top
-        // so the order or swapped
-        memcpy(*outData+(row_bytes * (outHeight-1-i)), row_pointers[i], row_bytes);
+    for (int i = 0; i < height; i++) {
+        memcpy(data + (row_bytes * i), row_pointers[i], row_bytes);
     }
 
     /* Clean up after the read,

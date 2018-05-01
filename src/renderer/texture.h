@@ -12,7 +12,7 @@ class Texture {
 	GLubyte* data;
 	GLuint bufferId;
 
-	bool loadPNGImage(const std::string &filename, int& outWidth, int& outHeight, bool& outHasAlpha, GLubyte** outData);
+	bool loadPNGImage(const std::string &filename);
 
 public:
 	Texture(const std::string &filename);
