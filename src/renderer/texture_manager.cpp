@@ -4,13 +4,19 @@
 
 #include "texture.h"
 
+TextureManager::~TextureManager(){
+	std::cout << "Deleting " << textureData.size() << " textures" << std::endl;
+	glDeleteTextures(textureData.size(), textureBuffers);
+	delete [] textureBuffers;
+}
+
 void TextureManager::loadTextureSet(std::unordered_set<std::string> textureNames){
 	// Create appropriate number of texture buffers
 	int numBuffers = textureNames.size();
 	std::cout << "Creating " << numBuffers << " texture buffers" << std::endl;
 	delete [] textureBuffers;
 	textureBuffers = new GLuint[numBuffers];
-	glGenTextures(numBuffers, textureBuffers);	// Shouldn't these be deleted eventually?
+	glGenTextures(numBuffers, textureBuffers);
 
 	// Load data for each texture
 	textureData.clear();
