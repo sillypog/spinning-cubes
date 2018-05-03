@@ -6,6 +6,7 @@
 #include "./opengl.h"
 
 class Texture {
+	const int RGB_BYTES = 3;
 	int width, height;
 	bool alpha;
 	GLubyte* data;

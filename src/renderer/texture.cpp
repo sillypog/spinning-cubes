@@ -10,6 +10,14 @@ Texture::Texture(const std::string &filename){
 	std::cout << "Outcome of loading " << filename << ": " << (success ? "success" : "fail") << std::endl;
     if (success){
     	std::cout << filename << ": " << width << "x" << height << ", alpha: " << alpha << std::endl;
+    } else {
+        // Assign a placeholder texture
+        width = 2;
+        height = 2;
+        data = new GLubyte[RGB_BYTES * width * height] {
+            255, 255, 255, 0, 0, 0,
+            0, 0, 0, 255, 255, 255
+        };
     }
 }
 
