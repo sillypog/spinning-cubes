@@ -38,6 +38,9 @@ Textures on cube.
 Add in a camera for 3D.
 Something that updates the cube position.
 
+Implementing texture support:
+http://stackoverflow.com/questions/8866904/differences-and-relationship-between-glactivetexture-and-glbindtexture
+
 # Goal for branch 'scene-management'
 
 Create a scene class. Eventually it will describe the position of all the geometry, cameras and lights in the scene. For now, it can just have the hard coded geometry values of the shapes. This should include shape position and size. The cube class will need to be modified so that it's position and size can be changed and that will update the coordinates.

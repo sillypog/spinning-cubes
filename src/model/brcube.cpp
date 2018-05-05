@@ -24,7 +24,7 @@ BRCube::BRCube() : Entity({
 	11, 2, 12, 12, 13, 11,
 	10, 14, 5,  5,  4, 10,
 	3,  2, 11, 11, 15,  3
-}) {
+}, {"puppy.png", "kitten.png"}) {
 	std::cout << "BRCube is using default translation" << endl;
 	glm::vec3 translation {0.0f, 0.0f, 0.0f};
 	transform = glm::translate(transform, translation);

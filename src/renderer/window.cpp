@@ -6,7 +6,7 @@ using namespace std;
 
 Window::Window(int _width, int _height) : width(_width), height(_height){
 	glfwSetErrorCallback([](int error, const char* description){
-		cout << "There was an error" << endl;
+		cout << "GLFW error " << error << ": " << description << endl;
 	});
 
 	if (!glfwInit()){

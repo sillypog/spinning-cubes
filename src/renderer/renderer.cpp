@@ -1,8 +1,15 @@
 #include "./renderer.h"
+#include "./texture.h"
 
 #include <iostream>
+
 #include <glm/gtc/type_ptr.hpp>
-Renderer::Renderer(Window& _window, Scene& _scene): window(_window), scene(_scene) {
+
+Renderer::Renderer(Window& _window, Scene& _scene):
+	window(_window),
+	scene(_scene),
+	textureManager(new TextureManager)
+{
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -13,6 +20,8 @@ Renderer::Renderer(Window& _window, Scene& _scene): window(_window), scene(_scen
 }
 
 Renderer::~Renderer(){
+	delete textureManager;
+
 	glDeleteBuffers(1, &ebo);
 	glDeleteBuffers(1, &vbo);
 	glDeleteVertexArrays(1, &vao);
@@ -45,13 +54,19 @@ void Renderer::createScene(){
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numElements, elements.data(), GL_STATIC_DRAW);
 
 	shaderProgram.defineAttributes({{"position", 3}, {"color", 3}, {"texcoord", 2}});
+
+	// One time set up of texture uniforms to texture units
+	glUniform1i(shaderProgram.uniform("tex0"), 0);
+	glUniform1i(shaderProgram.uniform("tex1"), 1);
+
+	// Load any texture files needed for the scene
+	cout << "Getting set of textures." << endl;
+	textureManager->loadTextureSet(scene.getTextures());
 }
 
 void Renderer::draw(){
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	//glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_INT, 0);
 
 	// Draw each shape in the scene separately, applying the transform for each
 	// For each shape, we need the scene to give us:
@@ -61,10 +76,17 @@ void Renderer::draw(){
 
 	int drawnElements = 0;
 
-	for (int i = 0; i < scene.entities.size(); i++) {
-		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(scene.entities[i]->getTransform()));
-		int count = scene.entities[i]->numElements();
+	for (auto const &entity : scene.entities) {
+		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(entity->getTransform()));
 
+		// Bind the appropriate textures into the appropriate texture units
+		GLenum activeTextureUnit = GL_TEXTURE0;
+		for (auto const &texture : entity->getTextures()) {
+			glActiveTexture(activeTextureUnit++);	// Take current value and increment
+			textureManager->setTextureForDraw(texture);
+		}
+
+		int count = entity->numElements();
 		// It took so long to work out how the 4th parameter to set the starting index
 		// works. The offset needs to be cast to a pointer, and that apparently
 		// only works certain ways.
@@ -74,7 +96,6 @@ void Renderer::draw(){
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, reinterpret_cast<GLvoid*>(drawnElements * sizeof(int)));
 		drawnElements += count;
 	}
-
 
 	window.swapBuffers();
 }

@@ -8,7 +8,7 @@ DEPS=-MMD -MF deps/$(basename $(@F)).d
 
 all: obj deps bin bin/spinning-boxes.app bin/assets
 
-bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/entity.o obj/square.o obj/cube.o obj/tlcube.o obj/brcube.o obj/scene.o
+bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/texture.o obj/entity.o obj/square.o obj/cube.o obj/tlcube.o obj/brcube.o obj/scene.o obj/texture_manager.o
 	g++ $(VERBOSE_FLAG) $(LIBRARY_PATHS) $(LINKER_FLAGS) $^ -o $@
 
 obj/main.o: src/main.cpp
@@ -35,6 +35,10 @@ obj/shader_program.o: src/renderer/shader_program.cpp
 	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
 -include deps/shader_program.d
 
+obj/texture.o: src/renderer/texture.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/texture.d
+
 obj/entity.o: src/model/entity.cpp
 	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
 -include deps/entity.d
@@ -58,6 +62,10 @@ obj/brcube.o: src/model/brcube.cpp
 obj/scene.o: src/model/scene.cpp
 	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
 -include deps/scene.d
+
+obj/texture_manager.o: src/renderer/texture_manager.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/texture_manager.d
 
 bin/assets: bin assets
 	cp -r assets bin

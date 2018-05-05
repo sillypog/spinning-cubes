@@ -4,6 +4,8 @@
 #include <iterator>
 #include <iostream>
 #include <numeric> // accumulate
+#include <string>
+#include <unordered_set>
 
 Scene::Scene() {
 	entities.emplace_back(new Cube({-0.3f, 0.0f, 0.0f}));
@@ -35,8 +37,9 @@ const vector<int> Scene::getElements() const {
 
 	// Loop over all of the entities and add their elements to allElements
 	// BUT offset each element by the number of vertices referenced at the start of this loop.
-	for (int i=0, offset=0, addition=0; i < entities.size(); i++){
-		const vector<int>& elements = entities[i]->getElements();	// Because we use this 3 times in loop
+	int offset = 0, addition = 0;
+	for (auto &entity : entities){
+		const vector<int>& elements = entity->getElements();	// Because we use this 3 times in loop
 		allElements.resize(allElements.size() + elements.size());
 
 		std::transform(elements.begin(), elements.end(), std::next(allElements.begin(), offset), [&](int val){
@@ -44,8 +47,20 @@ const vector<int> Scene::getElements() const {
 		});
 
 		offset = allElements.size(); // Write next set of values to the end of the vector
-		addition += (entities[i]->getVertices().size() / 8); // Each vertex has 8 array members
+		addition += (entity->getVertices().size() / 8); // Each vertex has 8 array members
 	}
 
 	return allElements;
+}
+
+const unordered_set<string> Scene::getTextures() const {
+	unordered_set<string> allTextures;
+
+	for (auto &entity : entities){
+		for (auto &textureName : entity->getTextures()) {
+			allTextures.insert(textureName);
+		}
+	}
+
+	return allTextures;
 }
