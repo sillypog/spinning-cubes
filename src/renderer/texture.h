@@ -12,8 +12,6 @@ class Texture {
 	GLubyte* data;
 	GLuint bufferId;
 
-	bool loadPNGImage(const std::string &filename);
-
 public:
 	Texture(const std::string &filename);
 	~Texture();
