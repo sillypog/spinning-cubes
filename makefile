@@ -8,7 +8,7 @@ DEPS=-MMD -MF deps/$(basename $(@F)).d
 
 all: obj deps bin bin/spinning-boxes.app bin/assets
 
-bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/texture.o obj/entity.o obj/square.o obj/cube.o obj/tlcube.o obj/brcube.o obj/scene.o obj/texture_manager.o obj/png_loader.o
+bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/texture.o obj/entity.o obj/square.o obj/cube.o obj/tlcube.o obj/brcube.o obj/scene.o obj/texture_manager.o obj/png_loader.o obj/image_loader.o
 	g++ $(VERBOSE_FLAG) $(LIBRARY_PATHS) $(LINKER_FLAGS) $^ -o $@
 
 obj/main.o: src/main.cpp
@@ -70,6 +70,10 @@ obj/texture_manager.o: src/renderer/texture_manager.cpp
 obj/png_loader.o: src/renderer/image_loaders/png_loader.cpp
 	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
 -include deps/png_loader.d
+
+obj/image_loader.o: src/renderer/image_loaders/image_loader.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/image_loader.d
 
 bin/assets: bin assets
 	cp -r assets bin

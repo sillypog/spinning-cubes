@@ -1,23 +1,23 @@
 #include "./texture.h"
 
-#include <fstream>
 #include <iostream>
 
-#include "image_loaders/png_loader.h"
+#include "image_loaders/image_loader.h"
 
 Texture::Texture(const std::string &filename){
-	PngLoader imageLoader("assets/textures/" + filename);
-	ImageData imageData = imageLoader.extractImageData();
+	ImageLoader* imageLoader = ImageLoader::buildLoader("assets/textures/" + filename);
 
-	width = imageData.width;
-	height = imageData.height;
-	alpha = imageData.alpha;
-	data = reinterpret_cast<GLubyte*>(imageData.pixels);
+	try {
+		ImageData imageData = imageLoader->extractImageData();
 
-	std::cout << "Outcome of loading " << filename << ": " << (imageData.success ? "success" : "fail") << std::endl;
-	if (imageData.success){
+		width = imageData.width;
+		height = imageData.height;
+		alpha = imageData.alpha;
+		data = reinterpret_cast<GLubyte*>(imageData.pixels);
+
 		std::cout << filename << ": " << width << "x" << height << ", alpha: " << alpha << std::endl;
-	} else {
+	} catch(ImageLoadException exception) {
+		std::cout << "ImageLoadException: (" << filename << ")" << exception.getMessage() << std::endl;
 		// Assign a placeholder texture
 		width = 2;
 		height = 2;
@@ -26,6 +26,9 @@ Texture::Texture(const std::string &filename){
 			0, 0, 0, 255, 255, 255
 		};
 	}
+
+	delete imageLoader;
+
 }
 
 Texture::~Texture() {

@@ -1,10 +1,6 @@
 #include "png_loader.h"
 
-#include <iostream>
-
-PngLoader::PngLoader(std::string _filename) : filename(_filename) {
-	source.open(filename, std::ios::binary);
-}
+PngLoader::PngLoader(std::string _filename) : ImageLoader(_filename) {}
 
 PngLoader::~PngLoader() {
 	if (pngPtr && infoPtr) {
@@ -16,26 +12,29 @@ PngLoader::~PngLoader() {
 
 ImageData PngLoader::extractImageData() {
 	png_bytepp rowPointers;
+	png_voidp errorPtr = nullptr;
 	int colorType, interlaceType;
 	ImageData imageData;
 
 	if (!source.good()) {
-		std::cout << "Unable to read file " << filename << std::endl;
-		return imageData;
+		throw ImageLoadException("Unable to read file");
 	}
 
 	if (!isPng()) {
-		std::cout << filename << " is not a png " << std::endl;
-		return imageData;
+		throw ImageLoadException("File is not a png");
 	}
 
-	/* Create and initialize the png_struct with the desired error handler
-	 * functions.  If you want to use the default stderr and longjump method,
-	 * you can supply NULL for the last three parameters.  We also supply the
-	 * the compiler header file version, so that we know if the application
-	 * was compiled with a compatible version of the library.  REQUIRED
-	 */
-	pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	/*
+	Create and initialize the png_struct with the desired error handler
+	functions.  To avoid having to use libpng's setjmp/longjpm error handler,
+	our own exception-based handler is supplied as a lambda. The first argument
+	to the lambda is pngPtr, but we don't use it so it is left unnamed.
+	We also supply the the compiler header file version, so that we know if the
+	application was compiled with a compatible version of the library.  REQUIRED
+	*/
+	pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, errorPtr, [](png_structp, png_const_charp errorMessage) {
+		throw ImageLoadException(errorMessage);
+	}, NULL);
 
 	if (!pngPtr) {
 		return imageData;
@@ -47,39 +46,32 @@ ImageData PngLoader::extractImageData() {
 		return imageData;
 	}
 
-	/* Set error handling if you are using the setjmp/longjmp method
-	 * (this is the normal method of doing things with libpng).
-	 * REQUIRED unless you set up your own error handlers in
-	 * the png_create_read_struct() earlier.
-	 */
-	if (setjmp(png_jmpbuf(pngPtr))) {
-		// If we get here, we had a problem reading the file
-		return imageData;
-	}
-
-	/* Set up the output control for using std::istream */
+	/*
+	Set up the output control for using std::istream, rather than using png_init_io
+	which requires a C-style file pointer.
+	*/
 	png_set_read_fn(pngPtr, reinterpret_cast<png_voidp>(&source), [](png_structp pngPtr, png_bytep data, png_size_t length){
 		// Here we get our IO pointer back from the read struct.
 		// This is the parameter we passed to the png_set_read_fn() function.
 		// Our std::istream pointer.
-		png_voidp source = png_get_io_ptr(pngPtr);
-		// Cast the pointer to std::istream* and read 'length' bytes into 'data'
-		(reinterpret_cast<std::istream*>(source))->read(reinterpret_cast<char*>(data), length);
+		std::ifstream* source = reinterpret_cast<std::ifstream*>(png_get_io_ptr(pngPtr));
+		// Read 'length' bytes into 'data'
+		source->read(reinterpret_cast<char*>(data), length);
 	});
 
-	/* If we have already read some of the signature */
+	/* Since we have already read some of the signature */
 	png_set_sig_bytes(pngPtr, SIG_BYTES);
 
 	/*
-	 * If you have enough memory to read in the entire image at once, and
-	 * you need to specify only transforms that can be controlled
-	 * with one of the PNG_TRANSFORM_* bits (this presently excludes
-	 * dithering, filling, setting background, and doing gamma
-	 * adjustment), then you can read the entire image (including pixels)
-	 * into the info structure with this call
-	 *
-	 * PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING  forces 8 bit
-	 * PNG_TRANSFORM_EXPAND  forces to expand a palette into RGB
+	If you have enough memory to read in the entire image at once, and
+	you need to specify only transforms that can be controlled
+	with one of the PNG_TRANSFORM_* bits (this presently excludes
+	dithering, filling, setting background, and doing gamma
+	adjustment), then you can read the entire image (including pixels)
+	into the info structure with this call
+
+	PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING  forces 8 bit
+	PNG_TRANSFORM_EXPAND  forces to expand a palette into RGB
 	 */
 	png_read_png(pngPtr, infoPtr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, NULL);
 
@@ -91,6 +83,12 @@ ImageData PngLoader::extractImageData() {
 	imageData.height = static_cast<int>(png_height);
 	imageData.alpha = (colorType & PNG_COLOR_MASK_ALPHA);
 
+	/*
+	Allocate space to hold the pixel data.
+	The pointer to the data is returned from this function and the memory
+	is expected to be managed by the caller - the pixel data outlives the
+	loader instance.
+	*/
 	unsigned int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
 	imageData.pixels = new unsigned char[rowBytes * imageData.height];
 
@@ -100,7 +98,6 @@ ImageData PngLoader::extractImageData() {
 		memcpy(imageData.pixels + (rowBytes * i), rowPointers[i], rowBytes);
 	}
 
-	imageData.success = true;
 	return imageData;
 }
 
