@@ -6,7 +6,6 @@
 
 #include "./entity.h"
 #include "./cube.h"
-#include "./tlcube.h"
 #include "./brcube.h"
 
 #include <unordered_set>

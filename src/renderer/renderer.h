@@ -3,6 +3,7 @@
 
 #include "./opengl.h"
 #include "./window.h"
+#include "./camera.h"
 #include "./shader_program.h"
 #include "./texture_manager.h"
 #include "../model/scene.h"
@@ -10,6 +11,7 @@
 class Renderer {
 	Window& window;	// Should store a reference to the window
 	Scene& scene;	// Should store a reference to the scene to get shapes to draw
+	Camera* camera;
 	ShaderProgram shaderProgram;
 	TextureManager* textureManager;
 

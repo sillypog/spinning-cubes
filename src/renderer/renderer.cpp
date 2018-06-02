@@ -8,11 +8,13 @@
 Renderer::Renderer(Window& _window, Scene& _scene):
 	window(_window),
 	scene(_scene),
+	camera(new Camera({1.2f, 1.2f, 3.2f}, {0.0f, 0.0f, 0.0f})),
 	textureManager(new TextureManager)
 {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
+	glEnable(GL_DEPTH_TEST);
 
 	shaderProgram.addVertexShader("assets/shaders/solid/vertex.glsl");
 	shaderProgram.addFragmentShader("assets/shaders/solid/fragment.glsl");
@@ -20,6 +22,7 @@ Renderer::Renderer(Window& _window, Scene& _scene):
 }
 
 Renderer::~Renderer(){
+	delete camera;
 	delete textureManager;
 
 	glDeleteBuffers(1, &ebo);
@@ -66,7 +69,11 @@ void Renderer::createScene(){
 
 void Renderer::draw(){
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearDepth(1.0f); // This is the default anyway
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glUniformMatrix4fv(shaderProgram.uniform("view"), 1, GL_FALSE, glm::value_ptr(camera->getView()));
+	glUniformMatrix4fv(shaderProgram.uniform("proj"), 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
 
 	// Draw each shape in the scene separately, applying the transform for each
 	// For each shape, we need the scene to give us:
@@ -77,7 +84,7 @@ void Renderer::draw(){
 	int drawnElements = 0;
 
 	for (auto const &entity : scene.entities) {
-		glUniformMatrix4fv(shaderProgram.uniform("trans"), 1, GL_FALSE, glm::value_ptr(entity->getTransform()));
+		glUniformMatrix4fv(shaderProgram.uniform("model"), 1, GL_FALSE, glm::value_ptr(entity->getTransform()));
 
 		// Bind the appropriate textures into the appropriate texture units
 		GLenum activeTextureUnit = GL_TEXTURE0;
