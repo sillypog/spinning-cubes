@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "./window.h"
+#include "./keyboard.h"
 
 using namespace std;
 
@@ -27,6 +28,10 @@ Window::Window(int _width, int _height) : width(_width), height(_height){
 	glfwMakeContextCurrent(window);
 
 	glfwSwapInterval(0);
+
+	glfwSetKeyCallback(window, [](GLFWwindow*, int key, int, int action, int){
+		Keyboard::handleInput(key, action);
+	});
 
 	// Setup GLEW to handle modern OpenGL functions
 	glewExperimental = GL_TRUE;

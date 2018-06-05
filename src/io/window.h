@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "./opengl.h"
+#include "../renderer/opengl.h"
 
 class Window {
 	int width;

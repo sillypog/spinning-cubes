@@ -2,7 +2,7 @@
 #include <chrono>
 #include <thread>
 
-#include "renderer/window.h"
+#include "io/window.h"
 #include "renderer/renderer.h"
 #include "util/framecounter.h"
 #include "model/scene.h"

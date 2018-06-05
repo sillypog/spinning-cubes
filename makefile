@@ -8,14 +8,14 @@ DEPS=-MMD -MF deps/$(basename $(@F)).d
 
 all: obj deps bin bin/spinning-boxes.app bin/assets
 
-bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/texture.o obj/entity.o obj/cube.o obj/brcube.o obj/scene.o obj/texture_manager.o obj/png_loader.o obj/image_loader.o obj/camera.o
+bin/spinning-boxes.app: obj/main.o obj/window.o obj/framecounter.o obj/renderer.o obj/shader.o obj/shader_program.o obj/texture.o obj/entity.o obj/cube.o obj/brcube.o obj/scene.o obj/texture_manager.o obj/png_loader.o obj/image_loader.o obj/camera.o obj/keyboard.o
 	g++ $(VERBOSE_FLAG) $(LIBRARY_PATHS) $(LINKER_FLAGS) $^ -o $@
 
 obj/main.o: src/main.cpp
 	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
 -include deps/main.d
 
-obj/window.o: src/renderer/window.cpp
+obj/window.o: src/io/window.cpp
 	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
 -include deps/window.d
 
@@ -70,6 +70,10 @@ obj/image_loader.o: src/renderer/image_loaders/image_loader.cpp
 obj/camera.o: src/renderer/camera.cpp
 	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
 -include deps/camera.d
+
+obj/keyboard.o: src/io/keyboard.cpp
+	g++ -c $(VERBOSE_FLAG) $(CFLAGS) $(INCLUDE_PATHS) $(DEPS) $< -o $@
+-include deps/keyboard.d
 
 bin/assets: bin assets
 	cp -r assets bin

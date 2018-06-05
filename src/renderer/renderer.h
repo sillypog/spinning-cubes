@@ -2,10 +2,10 @@
 #define RENDERER_H
 
 #include "./opengl.h"
-#include "./window.h"
 #include "./camera.h"
 #include "./shader_program.h"
 #include "./texture_manager.h"
+#include "../io/window.h"
 #include "../model/scene.h"
 
 class Renderer {
